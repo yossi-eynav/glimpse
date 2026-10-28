@@ -1,0 +1,9 @@
+{
+  "id": "sess-1",
+  "pickerUri": "https://photos.google.com/picker/sess-1",
+  "pollingConfig": {
+    "pollInterval": "5s",
+    "timeoutIn": "1795s"
+  },
+  "mediaItemsSet": false
+}

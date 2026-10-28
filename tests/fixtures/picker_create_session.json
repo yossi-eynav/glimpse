@@ -1,0 +1,10 @@
+{
+  "id": "sess-1",
+  "pickerUri": "https://photos.google.com/picker/sess-1",
+  "pollingConfig": {
+    "pollInterval": "5s",
+    "timeoutIn": "1800s"
+  },
+  "expireTime": "2026-10-27T18:00:00Z",
+  "mediaItemsSet": false
+}

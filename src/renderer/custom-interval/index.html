@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'" />
+    <title>Custom interval</title>
+    <link rel="stylesheet" href="custom-interval.css" />
+  </head>
+  <body>
+    <form id="form">
+      <label for="value">Change the wallpaper every</label>
+      <div class="row">
+        <input id="value" type="number" min="1" step="1" required />
+        <select id="unit" aria-label="Unit">
+          <option value="minutes">minutes</option>
+          <option value="hours">hours</option>
+          <option value="days">days</option>
+        </select>
+      </div>
+      <p id="hint" role="status">Between 1 minute and 7 days</p>
+      <div class="buttons">
+        <button type="button" id="cancel">Cancel</button>
+        <button type="submit" id="ok" class="primary">OK</button>
+      </div>
+    </form>
+    <script type="module" src="custom-interval.js"></script>
+  </body>
+</html>

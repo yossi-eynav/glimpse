@@ -1,0 +1,32 @@
+{
+  "mediaItems": [
+    {
+      "id": "item-4",
+      "createTime": "2024-05-04T10:00:00Z",
+      "type": "PHOTO",
+      "mediaFile": {
+        "baseUrl": "https://lh3.googleusercontent.com/pk/item-4",
+        "mimeType": "image/jpeg",
+        "filename": "IMG_4.jpg",
+        "mediaFileMetadata": {
+          "width": 4000,
+          "height": 3000
+        }
+      }
+    },
+    {
+      "id": "item-5",
+      "createTime": "2024-05-05T10:00:00Z",
+      "type": "PHOTO",
+      "mediaFile": {
+        "baseUrl": "https://lh3.googleusercontent.com/pk/item-5",
+        "mimeType": "image/jpeg",
+        "filename": "IMG_5.jpg",
+        "mediaFileMetadata": {
+          "width": 4000,
+          "height": 3000
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "google-photos-wallpaper",
+  "productName": "Google Photos Wallpaper",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Rotate your macOS wallpaper and screensaver through photos you choose from Google Photos.",
+  "type": "module",
+  "main": "dist/main/main.js",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/build-renderer.js && node scripts/copy-static.js",
+    "start": "npm run build && electron-forge start",
+    "test": "node --test --test-timeout=20000 \"tests/**/*.test.ts\"",
+    "typecheck": "tsc -p tsconfig.test.json",
+    "build:native": "bash scripts/build-native.sh",
+    "make": "npm run build && npm run build:native && electron-forge make --arch=universal"
+  },
+  "dependencies": {
+    "@emotion/react": "11.14.0",
+    "@emotion/styled": "11.14.1",
+    "@mui/icons-material": "9.5.0",
+    "@mui/material": "9.5.0",
+    "google-auth-library": "11.3.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^8.0.1",
+    "@electron-forge/maker-dmg": "^8.0.1",
+    "@electron-forge/maker-zip": "^8.0.1",
+    "@types/node": "^24.19.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "electron": "45.0.0",
+    "esbuild": "0.28.2",
+    "typescript": "^7.0.2"
+  }
+}

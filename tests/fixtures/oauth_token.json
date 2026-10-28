@@ -1,0 +1,8 @@
+{
+  "access_token": "ya29.access-1",
+  "expires_in": 3599,
+  "refresh_token": "1//refresh-1",
+  "scope": "https://www.googleapis.com/auth/photospicker.mediaitems.readonly openid email",
+  "token_type": "Bearer",
+  "id_token": "eyJhbGciOiAiUlMyNTYiLCAidHlwIjogIkpXVCJ9.eyJpc3MiOiAiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tIiwgImF1ZCI6ICJjaWQiLCAic3ViIjogIjEyMyIsICJlbWFpbCI6ICJ0ZXN0QGV4YW1wbGUuY29tIiwgImVtYWlsX3ZlcmlmaWVkIjogdHJ1ZX0.sig"
+}

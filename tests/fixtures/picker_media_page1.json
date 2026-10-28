@@ -1,0 +1,47 @@
+{
+  "mediaItems": [
+    {
+      "id": "item-1",
+      "createTime": "2024-05-01T10:00:00Z",
+      "type": "PHOTO",
+      "mediaFile": {
+        "baseUrl": "https://lh3.googleusercontent.com/pk/item-1",
+        "mimeType": "image/jpeg",
+        "filename": "IMG_1.jpg",
+        "mediaFileMetadata": {
+          "width": 4000,
+          "height": 3000
+        }
+      }
+    },
+    {
+      "id": "item-2",
+      "createTime": "2024-05-02T10:00:00Z",
+      "type": "PHOTO",
+      "mediaFile": {
+        "baseUrl": "https://lh3.googleusercontent.com/pk/item-2",
+        "mimeType": "image/jpeg",
+        "filename": "IMG_2.jpg",
+        "mediaFileMetadata": {
+          "width": 4000,
+          "height": 3000
+        }
+      }
+    },
+    {
+      "id": "item-3",
+      "createTime": "2024-05-03T10:00:00Z",
+      "type": "VIDEO",
+      "mediaFile": {
+        "baseUrl": "https://lh3.googleusercontent.com/pk/item-3",
+        "mimeType": "video/mp4",
+        "filename": "IMG_3.jpg",
+        "mediaFileMetadata": {
+          "width": 4000,
+          "height": 3000
+        }
+      }
+    }
+  ],
+  "nextPageToken": "p2"
+}
