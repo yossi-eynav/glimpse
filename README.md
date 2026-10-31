@@ -18,7 +18,28 @@ through photos you choose from Google Photos.
 
 The full specification is in [`specs/001-photos-wallpaper-rotation/`](specs/001-photos-wallpaper-rotation/).
 
-## Requirements
+## Install
+
+Glimpse runs on macOS 14 (Sonoma) or later, on Apple silicon and Intel Macs. The newest build
+is always on the [latest release](https://github.com/yossi-eynav/glimpse/releases/latest):
+[Glimpse-universal.dmg](https://github.com/yossi-eynav/glimpse/releases/latest/download/Glimpse-universal.dmg)
+or [Glimpse-universal.zip](https://github.com/yossi-eynav/glimpse/releases/latest/download/Glimpse-universal.zip).
+
+1. Download **Glimpse-universal.dmg**, open it, and drag Glimpse to Applications.
+2. Open Glimpse. macOS says it can't check it for malware, because Glimpse isn't notarized by
+   Apple. Click **Done**.
+3. Open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to
+   Glimpse. Confirm with your password. On macOS 15 and later, right-click → Open no longer
+   skips this step.
+4. Glimpse appears in the menu bar. You only need to do this once.
+
+After an update, macOS may ask to let Glimpse use its saved sign-in in your Keychain. Choose
+**Always Allow**.
+
+If you're comfortable with Terminal, you can skip steps 2–3 by running
+`xattr -dr com.apple.quarantine /Applications/Glimpse.app` once after copying the app.
+
+## Requirements (to build from source)
 
 - macOS 14 (Sonoma) or later
 - Node.js 24 or later
@@ -75,8 +96,13 @@ Tests never change your real wallpaper: they drive a fake helper (`tests/support
 npm run make
 ```
 
-This builds a universal `.app`, plus a zip and a DMG, in `out/make/`. To sign and notarize, set
-these environment variables first:
+This builds a universal `.app`, plus a zip and a DMG, in `out/make/`. By default the app is
+ad-hoc signed (`scripts/adhoc-sign.sh`, run after packaging), which needs no Apple Developer
+account. Users then approve it once with **Open Anyway** (see [Install](#install)).
+`scripts/check-package.sh out/Glimpse-darwin-universal/Glimpse.app` checks the signature,
+architectures and bundled files.
+
+To sign with a Developer ID and notarize instead, set these environment variables first:
 
 | Variable | Meaning |
 |----------|---------|
@@ -84,10 +110,28 @@ these environment variables first:
 | `NOTARY_KEYCHAIN_PROFILE` | A profile saved with `xcrun notarytool store-credentials` |
 | `DEVELOPER_ID` | Used to sign `glimpse-helper` and the screensaver, for example `Developer ID Application: Name (TEAMID)` |
 
-The DMG maker depends on two native modules, `fs-xattr` and `macos-alias`. npm blocks their
-install scripts by default, so approve them first with
-`npm install-scripts approve fs-xattr macos-alias`, then run `npm install` again. The zip maker
-works without them.
+The DMG maker depends on two native modules, `fs-xattr` and `macos-alias`, which build during
+install. Their install scripts are approved in `package.json` (`allowScripts`), so `npm ci` and
+`npm install` build them.
+
+## Continuous builds
+
+`.github/workflows/build.yml` runs on GitHub Actions:
+
+| Event | What happens |
+|-------|--------------|
+| Push to any branch | Type check and tests, then a signed dmg and zip, attached to the run for 30 days as `Glimpse-<version>-<commit>` |
+| Push to `main` | All of the above, then the [latest release](https://github.com/yossi-eynav/glimpse/releases/latest) is replaced with this build |
+| Pull request from this repository | Type check, tests and the build |
+| Pull request from a fork | Type check and tests only; forks never get the secrets |
+
+A newer push to the same branch cancels the older run. A failed run never changes the latest
+release.
+
+**Setup (once)**: in GitHub, go to **Settings → Secrets and variables → Actions** and add two
+repository secrets, `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`, with the values from your
+`config/google.json`. If either is missing, the build fails and names it. The repository must
+be public for anyone to download the releases.
 
 ## Known limitations
 

@@ -1,0 +1,130 @@
+# Tests every push and pull request, builds the ad-hoc signed universal dmg and zip, and
+# publishes each passing main commit as the single "latest" release
+# (specs/007-ci-release-builds, contracts/distribution.md).
+name: Build
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+
+  package:
+    needs: test
+    # Fork pull requests get no secrets, so they are only tested.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: macos-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      sha7: ${{ steps.meta.outputs.sha7 }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Write Google config
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+        run: |
+          missing=0
+          for name in GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing repository secret $name"
+              missing=1
+            fi
+          done
+          [[ $missing == 0 ]] || exit 1
+          jq -n --arg id "$GOOGLE_CLIENT_ID" --arg secret "$GOOGLE_CLIENT_SECRET" \
+            '{clientId: $id, clientSecret: $secret}' > config/google.json
+      - name: Version
+        id: meta
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+          echo "sha7=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+      - run: npm run make
+      - run: scripts/check-package.sh out/Glimpse-darwin-universal/Glimpse.app
+      - name: Collect
+        env:
+          NAME: Glimpse-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.sha7 }}-universal
+        run: |
+          shopt -s failglob
+          mkdir dist-ci
+          cp out/make/dmg/universal/*.dmg "dist-ci/$NAME.dmg"
+          cp out/make/zip/darwin/universal/*.zip "dist-ci/$NAME.zip"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Glimpse-${{ steps.meta.outputs.version }}-${{ steps.meta.outputs.sha7 }}
+          path: dist-ci/*
+          retention-days: 30
+          if-no-files-found: error
+
+  release:
+    needs: package
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency:
+      group: release-latest
+      cancel-in-progress: false
+    env:
+      VERSION: ${{ needs.package.outputs.version }}
+      SHA7: ${{ needs.package.outputs.sha7 }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: Glimpse-${{ needs.package.outputs.version }}-${{ needs.package.outputs.sha7 }}
+          path: dl
+      - name: Prepare assets and notes
+        run: |
+          shopt -s failglob
+          cp dl/*-universal.dmg Glimpse-universal.dmg
+          cp dl/*-universal.zip Glimpse-universal.zip
+          cat > notes.md <<EOF
+          Glimpse $VERSION, built from [$SHA7](https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA) on $(date -u +%Y-%m-%dT%H:%M:%SZ).
+
+          **Install**
+          1. Download **Glimpse-universal.dmg**, open it, and drag Glimpse to Applications.
+          2. Open Glimpse. macOS says it can't check it for malware, because Glimpse isn't notarized by Apple. Click **Done**.
+          3. Open **System Settings → Privacy & Security**, scroll down, and click **Open Anyway** next to Glimpse. Confirm with your password.
+          4. Glimpse appears in the menu bar. You only need to do this once.
+
+          After an update, macOS may ask to let Glimpse use its saved sign-in in your Keychain. Choose **Always Allow**.
+          EOF
+      - name: Move the latest tag
+        run: |
+          git tag -f latest "$GITHUB_SHA"
+          git push -f origin refs/tags/latest
+      - name: Update the latest release
+        run: |
+          title="Glimpse $VERSION ($SHA7)"
+          if gh release view latest >/dev/null 2>&1; then
+            gh release edit latest --title "$title" --notes-file notes.md --latest
+          else
+            gh release create latest --title "$title" --notes-file notes.md --latest
+          fi
+          gh release upload latest Glimpse-universal.dmg Glimpse-universal.zip --clobber

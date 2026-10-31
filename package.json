@@ -36,5 +36,10 @@
     "electron": "45.0.0",
     "esbuild": "0.28.2",
     "typescript": "^7.0.2"
+  },
+  "allowScripts": {
+    "fs-xattr@0.3.1": true,
+    "macos-alias@0.2.12": true,
+    "esbuild@0.28.2": true
   }
 }
