@@ -18,7 +18,7 @@ const started: { stop(): Promise<void> }[] = [];
 after(() => Promise.all(started.map((d) => d.stop())));
 
 const make = async (env: Record<string, string> = {}, opts: Partial<Parameters<typeof createHelperDesktop>[0]> = {}) => {
-  const dir = await mkdtemp(join(tmpdir(), 'pw-helper-'));
+  const dir = await mkdtemp(join(tmpdir(), 'glimpse-helper-'));
   const logFile = join(dir, 'requests.log');
   const logged: Logged[] = [];
   const desktop = createHelperDesktop({

@@ -19,9 +19,9 @@ export type Loopback = {
   waitForCode(state: string): Promise<string>;
 };
 
-const DONE_PAGE = `<!doctype html><meta charset="utf-8"><title>Google Photos Wallpaper</title>
+const DONE_PAGE = `<!doctype html><meta charset="utf-8"><title>Glimpse</title>
 <body style="font:16px -apple-system,sans-serif;padding:3em;text-align:center">
-<p>You can close this tab and return to Google Photos Wallpaper.</p></body>`;
+<p>You can close this tab and return to Glimpse.</p></body>`;
 
 /** One-shot OAuth redirect listener on 127.0.0.1 with an ephemeral port (RFC 8252). */
 export async function startLoopbackServer(opts: { timeoutMs: number }): Promise<Loopback> {

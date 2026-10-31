@@ -1,4 +1,4 @@
-// Shows the photo the Google Photos Wallpaper app is currently using as the wallpaper.
+// Shows the photo Glimpse is currently using as the wallpaper.
 // Reads the handoff folder described in specs/001-photos-wallpaper-rotation/contracts/screensaver-handoff.md.
 
 import AppKit
@@ -11,17 +11,17 @@ private struct Manifest: Decodable {
     let enabled: Bool
 }
 
-@objc(PhotoWallpaperSaverView)
-final class PhotoWallpaperSaverView: ScreenSaverView {
+@objc(GlimpseSaverView)
+final class GlimpseSaverView: ScreenSaverView {
     private let imageLayer = CALayer()
     private let messageLayer = CATextLayer()
     private var shownPhotoId: String?
     private var shownDisabled = false
 
     /// Inside the legacyScreenSaver sandbox, NSHomeDirectory() is the host's container,
-    /// so this resolves to …/Containers/com.apple.ScreenSaver.Engine.legacyScreenSaver/Data/Library/Application Support/PhotoWallpaper.
+    /// so this resolves to …/Containers/com.apple.ScreenSaver.Engine.legacyScreenSaver/Data/Library/Application Support/Glimpse.
     private let handoffDir = URL(fileURLWithPath: NSHomeDirectory())
-        .appendingPathComponent("Library/Application Support/PhotoWallpaper", isDirectory: true)
+        .appendingPathComponent("Library/Application Support/Glimpse", isDirectory: true)
 
     override init?(frame: NSRect, isPreview: Bool) {
         super.init(frame: frame, isPreview: isPreview)
@@ -74,7 +74,7 @@ final class PhotoWallpaperSaverView: ScreenSaverView {
             guard !shownDisabled else { return }
             showBlack()
             shownDisabled = true
-            messageLayer.string = "Google Photos Wallpaper is turned off in the menu"
+            messageLayer.string = "Glimpse is turned off in the menu"
             messageLayer.isHidden = false
             return
         }

@@ -77,7 +77,7 @@ Your data stays on your Mac until you delete it:
   cancel its access.
 - **Uninstall Glimpse** and delete its folder, `~/Library/Application Support/Glimpse/`, to
   remove your settings and everything else it saved. If you used the screensaver, also delete
-  `~/Library/Screen Savers/PhotoWallpaperSaver.saver`.
+  `~/Library/Screen Savers/Glimpse.saver`.
 
 You can also cancel Glimpse's access to your Google account at any time at
 <https://myaccount.google.com/permissions>.

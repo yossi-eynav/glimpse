@@ -1,17 +1,3 @@
-<!--
-Sync Impact Report
-- Version change: 1.0.0 → 1.0.1 (PATCH: clarifications, no change in meaning)
-- Modified principles: none
-- Modified sections:
-  - Title: "Google Photos App Constitution" → "Glimpse Constitution" (product name)
-  - Desktop Platform Constraints: the credentials rule now says that encryption with a key
-    held in the OS secure store (e.g. Electron safeStorage + macOS Keychain) satisfies it,
-    matching how every plan's Constitution Check already applied it
-- Added sections: none
-- Removed sections: none
-- Deferred TODOs: none
--->
-
 # Glimpse Constitution
 
 ## Core Principles

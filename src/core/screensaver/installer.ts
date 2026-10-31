@@ -11,7 +11,7 @@ export async function installSaver(deps: {
   openExternal(url: string): Promise<void>;
 }): Promise<void> {
   if (!(await deps.fs.exists(deps.bundledPath))) throw new Error(`The bundled screensaver is missing: ${deps.bundledPath}`);
-  const target = join(deps.home, 'Library', 'Screen Savers', 'PhotoWallpaperSaver.saver');
+  const target = join(deps.home, 'Library', 'Screen Savers', 'Glimpse.saver');
   await deps.fs.remove(target);
   await deps.fs.copy(deps.bundledPath, target);
   await deps.openExternal(SCREEN_SAVER_SETTINGS_URL);

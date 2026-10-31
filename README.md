@@ -1,4 +1,4 @@
-# Google Photos Wallpaper
+# Glimpse
 
 A macOS menu bar app that rotates your desktop wallpaper, and optionally your screensaver,
 through photos you choose from Google Photos.
@@ -47,7 +47,7 @@ The full specification is in [`specs/001-photos-wallpaper-rotation/`](specs/001-
 npm install
 npm test             # every behavior test; runs offline, no network access
 npm run typecheck
-npm run build:native # builds build/pw-helper and build/PhotoWallpaperSaver.saver with swiftc
+npm run build:native # builds build/glimpse-helper and build/Glimpse.saver with swiftc
 npm start            # compiles TypeScript and launches the app in the menu bar
 ```
 
@@ -61,8 +61,8 @@ states live in `src/renderer/selection/view-model.ts`, which is unit-tested; the
 checked by a render test that uses `react-dom/server`.
 
 `native/` holds the two small Swift pieces:
-- `native/helper/` is `pw-helper`, the wallpaper helper. The app runs it as a child process and
-  talks to it over a pipe. It sets the wallpaper, re-applies it on Space changes, and reports
+- `native/helper/` is `glimpse-helper`, the wallpaper helper. The app runs it as a child process
+  and talks to it over a pipe. It sets the wallpaper, re-applies it on Space changes, and reports
   manual changes. See
   [`contracts/wallpaper-helper.md`](specs/001-photos-wallpaper-rotation/contracts/wallpaper-helper.md).
 - `native/saver/` is the screensaver.
@@ -82,7 +82,7 @@ these environment variables first:
 |----------|---------|
 | `APPLE_TEAM_ID` | Your Apple Developer team ID |
 | `NOTARY_KEYCHAIN_PROFILE` | A profile saved with `xcrun notarytool store-credentials` |
-| `DEVELOPER_ID` | Used to sign `pw-helper` and the screensaver, for example `Developer ID Application: Name (TEAMID)` |
+| `DEVELOPER_ID` | Used to sign `glimpse-helper` and the screensaver, for example `Developer ID Application: Name (TEAMID)` |
 
 The DMG maker depends on two native modules, `fs-xattr` and `macos-alias`. npm blocks their
 install scripts by default, so approve them first with
@@ -95,7 +95,7 @@ works without them.
   Google's picker. Photos added to an album later are not picked up automatically; pick them
   again.
 - **Screensaver setup.** After you turn on "Use for screensaver", you still have to select
-  "Google Photos Wallpaper" once in System Settings → Screen Saver.
+  "Glimpse" once in System Settings → Screen Saver.
 
 ## Legal
 

@@ -7,7 +7,7 @@ export function createTray(opts: { iconPath: string; onClick(id: string): void }
   const icon = nativeImage.createFromPath(opts.iconPath);
   icon.setTemplateImage(true);
   const tray = new Tray(icon);
-  tray.setToolTip('Google Photos Wallpaper');
+  tray.setToolTip('Glimpse');
   return {
     render(items: MenuItem[]) {
       tray.setContextMenu(Menu.buildFromTemplate(toElectronMenu(items, opts.onClick)));

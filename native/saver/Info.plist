@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>PhotoWallpaperSaver</string>
+	<string>Glimpse</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.example.photowallpaper.saver</string>
+	<string>com.yossieynav.glimpse.saver</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Google Photos Wallpaper</string>
+	<string>Glimpse</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -21,6 +21,6 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0</string>
 	<key>NSPrincipalClass</key>
-	<string>PhotoWallpaperSaverView</string>
+	<string>GlimpseSaverView</string>
 </dict>
 </plist>

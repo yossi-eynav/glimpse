@@ -1,4 +1,4 @@
-// Stand-in for native/helper (pw-helper) in tests. Speaks contracts/wallpaper-helper.md over stdio
+// Stand-in for native/helper (glimpse-helper) in tests. Speaks contracts/wallpaper-helper.md over stdio
 // and never touches the real wallpaper. Behaviour is driven by FAKE_HELPER_* environment variables.
 import { appendFileSync } from 'node:fs';
 import { createInterface } from 'node:readline';

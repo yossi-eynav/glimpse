@@ -5,7 +5,7 @@ import { MemoryFileSystem } from '../../../src/core/persistence/fs.ts';
 import { ManualClock } from '../../../src/core/rotation/clock.ts';
 import { sampleJpeg } from '../../support/fixtures.ts';
 
-const DIR = '/Users/me/Library/Containers/com.apple.ScreenSaver.Engine.legacyScreenSaver/Data/Library/Application Support/PhotoWallpaper';
+const DIR = '/Users/me/Library/Containers/com.apple.ScreenSaver.Engine.legacyScreenSaver/Data/Library/Application Support/Glimpse';
 
 test('the default folder is inside the legacyScreenSaver container', () => {
   assert.equal(defaultHandoffDir('/Users/me'), DIR);

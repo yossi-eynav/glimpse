@@ -5,7 +5,7 @@ export type Desktop = {
   set(path: string): Promise<void>;
   /** Current wallpaper path for each screen. */
   get(): Promise<string[]>;
-  /** Stop re-applying the current photo (pw-helper re-applies it on Space changes). */
+  /** Stop re-applying the current photo (glimpse-helper re-applies it on Space changes). */
   clear?(): Promise<void>;
   /**
    * Puts each display's original wallpaper back where it still shows one of the app's photos,

@@ -34,7 +34,7 @@ type Pending = {
 
 export type HelperDesktop = Required<Desktop> & { start(): Promise<void>; stop(): Promise<void> };
 
-/** Runs pw-helper as a supervised child process and speaks contracts/wallpaper-helper.md. */
+/** Runs glimpse-helper as a supervised child process and speaks contracts/wallpaper-helper.md. */
 export function createHelperDesktop(opts: {
   command: string;
   args: string[];
@@ -83,8 +83,8 @@ export function createHelperDesktop(opts: {
     clearTimeout(p.timer);
     p.timer = setTimeout(() => {
       pending.delete(p.request.id);
-      p.reject(new HelperTimeout(`pw-helper did not answer ${p.request.cmd} within ${requestTimeoutMs} ms`));
-      opts.log('warn', 'pw-helper is not responding; restarting it');
+      p.reject(new HelperTimeout(`glimpse-helper did not answer ${p.request.cmd} within ${requestTimeoutMs} ms`));
+      opts.log('warn', 'glimpse-helper is not responding; restarting it');
       kill(child);
     }, requestTimeoutMs);
     child?.stdin.write(encodeRequest(p.request));
@@ -93,7 +93,7 @@ export function createHelperDesktop(opts: {
   const onReady = (version: number, isRestart: boolean) => {
     if (version !== SUPPORTED_HELPER_VERSION) {
       closed = true;
-      const error = new HelperIncompatible(`pw-helper speaks version ${version}, expected ${SUPPORTED_HELPER_VERSION}`);
+      const error = new HelperIncompatible(`glimpse-helper speaks version ${version}, expected ${SUPPORTED_HELPER_VERSION}`);
       readyWaiter?.reject(error);
       fail(() => new HelperUnavailable(error.message), { includeUnsent: true });
       kill(child);
@@ -125,11 +125,11 @@ export function createHelperDesktop(opts: {
       for (const line of out.push(chunk)) {
         const msg = parseLine(line);
         if (msg.type === 'invalid') {
-          opts.log('warn', 'pw-helper sent an invalid line', { reason: msg.reason });
+          opts.log('warn', 'glimpse-helper sent an invalid line', { reason: msg.reason });
         } else if (msg.type === 'event') {
           if (msg.event === 'ready') onReady(msg.version, isRestart);
           else if (msg.event === 'externalChange') for (const l of externalListeners) l(msg.paths);
-          else opts.log('info', 'pw-helper re-applied the wallpaper', { reason: msg.reason });
+          else opts.log('info', 'glimpse-helper re-applied the wallpaper', { reason: msg.reason });
         } else {
           const p = pending.get(msg.id);
           if (!p) continue;
@@ -143,14 +143,14 @@ export function createHelperDesktop(opts: {
     proc.stderr.setEncoding('utf8').on('data', (chunk: string) => {
       for (const line of err.push(chunk)) opts.log('warn', line);
     });
-    proc.on('error', (e) => opts.log('error', 'Could not run pw-helper', { error: String(e) }));
+    proc.on('error', (e) => opts.log('error', 'Could not run glimpse-helper', { error: String(e) }));
     proc.on('exit', (code, signal) => {
       if (child !== proc) return;
       child = null;
       ready = false;
-      fail(() => new HelperUnavailable('pw-helper exited'), { includeUnsent: closed });
+      fail(() => new HelperUnavailable('glimpse-helper exited'), { includeUnsent: closed });
       if (closed) return;
-      opts.log('warn', 'pw-helper exited', { code, signal });
+      opts.log('warn', 'glimpse-helper exited', { code, signal });
       scheduleRestart();
     });
   };
@@ -160,20 +160,20 @@ export function createHelperDesktop(opts: {
     restarts = restarts.filter((t) => now - t < restartWindowMs);
     if (restarts.length >= maxRestarts) {
       closed = true;
-      fail(() => new HelperUnavailable('pw-helper is not running'), { includeUnsent: true });
-      opts.log('error', `pw-helper keeps exiting; giving up after ${maxRestarts} restarts`);
+      fail(() => new HelperUnavailable('glimpse-helper is not running'), { includeUnsent: true });
+      opts.log('error', `glimpse-helper keeps exiting; giving up after ${maxRestarts} restarts`);
       return;
     }
     const delay = restartDelaysMs[Math.min(restarts.length, restartDelaysMs.length - 1)];
     restarts.push(now);
-    opts.log('warn', `pw-helper will restart in ${delay} ms`);
+    opts.log('warn', `glimpse-helper will restart in ${delay} ms`);
     setTimeout(() => {
       if (!closed) spawnHelper(true);
     }, delay);
   };
 
   const request = (command: Command): Promise<Reply> => {
-    if (closed) return Promise.reject(new HelperUnavailable('pw-helper is not running'));
+    if (closed) return Promise.reject(new HelperUnavailable('glimpse-helper is not running'));
     return new Promise((resolve, reject) => {
       const id = ++nextId;
       const p: Pending = {
@@ -184,7 +184,7 @@ export function createHelperDesktop(opts: {
         // Until it is sent, the request waits for the helper to (re)start.
         timer: setTimeout(() => {
           pending.delete(id);
-          reject(new HelperUnavailable('pw-helper did not become ready'));
+          reject(new HelperUnavailable('glimpse-helper did not become ready'));
         }, readyTimeoutMs),
       };
       pending.set(id, p);
@@ -194,14 +194,14 @@ export function createHelperDesktop(opts: {
 
   return {
     start() {
-      if (closed) return Promise.reject(new HelperUnavailable('pw-helper is not running'));
+      if (closed) return Promise.reject(new HelperUnavailable('glimpse-helper is not running'));
       return new Promise<void>((resolve, reject) => {
         readyWaiter = {
           resolve,
           reject,
           timer: setTimeout(() => {
             readyWaiter = null;
-            reject(new HelperUnavailable(`pw-helper did not start within ${readyTimeoutMs} ms`));
+            reject(new HelperUnavailable(`glimpse-helper did not start within ${readyTimeoutMs} ms`));
             closed = true;
             kill(child);
           }, readyTimeoutMs),
@@ -212,7 +212,7 @@ export function createHelperDesktop(opts: {
 
     async stop() {
       closed = true;
-      fail(() => new HelperUnavailable('pw-helper stopped'), { includeUnsent: true });
+      fail(() => new HelperUnavailable('glimpse-helper stopped'), { includeUnsent: true });
       const proc = child;
       if (!proc) return;
       await new Promise<void>((resolve) => {

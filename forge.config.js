@@ -2,10 +2,10 @@ const notarize = process.env.APPLE_TEAM_ID && process.env.NOTARY_KEYCHAIN_PROFIL
 
 export default {
   packagerConfig: {
-    name: 'Google Photos Wallpaper',
-    appBundleId: 'com.example.photowallpaper',
+    name: 'Glimpse',
+    appBundleId: 'com.yossieynav.glimpse',
     extendInfo: { LSUIElement: true },
-    extraResource: ['build/pw-helper', 'build/PhotoWallpaperSaver.saver', 'config/google.json'],
+    extraResource: ['build/glimpse-helper', 'build/Glimpse.saver', 'config/google.json'],
     ignore: [/^\/(src|tests|specs|native|scripts|\.specify|\.claude|build|config)(\/|$)/],
     ...(notarize && {
       osxSign: {},

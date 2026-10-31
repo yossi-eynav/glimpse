@@ -223,7 +223,7 @@ test('setUseForScreensaver(true) publishes the current photo; false disables the
   assert.equal(h.calls.length, 2);
 });
 
-// --- Amendment A: pw-helper ---
+// --- Amendment A: glimpse-helper ---
 
 test('stop tells the desktop helper to forget the current photo', async () => {
   const { engine, desktop } = await makeEngine(signedInState(['a', 'b']));

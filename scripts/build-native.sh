@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds the native pieces with swiftc from the Command Line Tools (no Xcode):
-#   build/pw-helper                  wallpaper helper (contracts/wallpaper-helper.md)
-#   build/PhotoWallpaperSaver.saver  screensaver (contracts/screensaver-handoff.md)
+#   build/glimpse-helper             wallpaper helper (contracts/wallpaper-helper.md)
+#   build/Glimpse.saver              screensaver (contracts/screensaver-handoff.md)
 # Both are universal (arm64 + x86_64). Signs ad-hoc, or with $DEVELOPER_ID
 # (e.g. "Developer ID Application: Name (TEAMID)") when set.
 set -euo pipefail
@@ -31,20 +31,20 @@ universal() {
 }
 
 build_helper() {
-  universal build/pw-helper -parse-as-library -framework AppKit native/helper/main.swift
-  sign build/pw-helper
-  echo "Built build/pw-helper"
+  universal build/glimpse-helper -parse-as-library -framework AppKit native/helper/main.swift
+  sign build/glimpse-helper
+  echo "Built build/glimpse-helper"
 }
 
 build_saver() {
-  local name=PhotoWallpaperSaver
+  local name=Glimpse
   local out="build/$name.saver"
   rm -rf "$out"
   mkdir -p "$out/Contents/MacOS"
   cp native/saver/Info.plist "$out/Contents/Info.plist"
   universal "$out/Contents/MacOS/$name" -parse-as-library -module-name "$name" \
     -Xlinker -bundle -framework ScreenSaver -framework AppKit -framework QuartzCore \
-    native/saver/PhotoWallpaperSaverView.swift
+    native/saver/GlimpseSaverView.swift
   sign "$out"
   echo "Built $out"
 }

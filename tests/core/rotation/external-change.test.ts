@@ -42,7 +42,7 @@ test('a folder that merely starts with the Photos path is still external', async
   assert.equal(engine.getState().rotation.mode, 'pausedExternalChange');
 });
 
-// --- Amendment A: pw-helper reports manual changes as they happen ---
+// --- Amendment A: glimpse-helper reports manual changes as they happen ---
 
 test('externalChange() pauses a running rotation without touching the wallpaper', async () => {
   const { engine, desktop } = await makeEngine(signedInState(['a', 'b']));

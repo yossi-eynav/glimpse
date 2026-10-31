@@ -1,4 +1,4 @@
-// pw-helper: sets the macOS wallpaper for Google Photos Wallpaper.
+// glimpse-helper: sets the macOS wallpaper for Glimpse.
 // Protocol: specs/001-photos-wallpaper-rotation/contracts/wallpaper-helper.md
 // (one JSON object per line on stdin/stdout; stderr is free-form diagnostics).
 
@@ -8,7 +8,7 @@ private let protocolVersion = 1
 private let selfChangeWindow: TimeInterval = 3
 
 private func log(_ message: String) {
-    FileHandle.standardError.write(Data("pw-helper: \(message)\n".utf8))
+    FileHandle.standardError.write(Data("glimpse-helper: \(message)\n".utf8))
 }
 
 @main
@@ -16,7 +16,7 @@ enum PWHelper {
     @MainActor static func main() {
         let args = CommandLine.arguments
         guard let i = args.firstIndex(of: "--photos-dir"), i + 1 < args.count else {
-            log("usage: pw-helper --photos-dir <path>")
+            log("usage: glimpse-helper --photos-dir <path>")
             exit(2)
         }
         Helper(photosDir: URL(fileURLWithPath: args[i + 1]).standardizedFileURL.path).run()

@@ -6,7 +6,7 @@ import type { Clock } from '../rotation/clock.ts';
 export function defaultHandoffDir(home: string): string {
   return join(
     home,
-    'Library/Containers/com.apple.ScreenSaver.Engine.legacyScreenSaver/Data/Library/Application Support/PhotoWallpaper',
+    'Library/Containers/com.apple.ScreenSaver.Engine.legacyScreenSaver/Data/Library/Application Support/Glimpse',
   );
 }
 

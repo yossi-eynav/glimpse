@@ -1,4 +1,4 @@
-// Wire format between the app and pw-helper: one JSON object per line (contracts/wallpaper-helper.md).
+// Wire format between the app and glimpse-helper: one JSON object per line (contracts/wallpaper-helper.md).
 
 export const SUPPORTED_HELPER_VERSION = 1;
 const MAX_LINE = 64 * 1024;

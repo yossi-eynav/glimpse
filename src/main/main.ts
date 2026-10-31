@@ -75,7 +75,7 @@ async function main(): Promise<void> {
 
   // Our own wallpaper helper (contracts/wallpaper-helper.md); it also re-applies the photo on Space changes.
   const desktop = createHelperDesktop({
-    command: app.isPackaged ? join(process.resourcesPath, 'pw-helper') : join(appDir, 'build', 'pw-helper'),
+    command: app.isPackaged ? join(process.resourcesPath, 'glimpse-helper') : join(appDir, 'build', 'glimpse-helper'),
     args: ['--photos-dir', photos.photosDir],
     log: consoleLog,
   });
@@ -151,14 +151,14 @@ async function main(): Promise<void> {
     await installSaver({
       fs,
       bundledPath: app.isPackaged
-        ? join(process.resourcesPath, 'PhotoWallpaperSaver.saver')
-        : join(appDir, 'build', 'PhotoWallpaperSaver.saver'),
+        ? join(process.resourcesPath, 'Glimpse.saver')
+        : join(appDir, 'build', 'Glimpse.saver'),
       home: app.getPath('home'),
       openExternal,
     });
     void dialog.showMessageBox({
       type: 'info',
-      message: "Select 'Google Photos Wallpaper' in Screen Saver settings",
+      message: "Select 'Glimpse' in Screen Saver settings",
       detail: 'The screensaver will then show the same photo as your wallpaper.',
     });
   };
@@ -189,7 +189,7 @@ async function main(): Promise<void> {
       await uninstallSaver({ fs, home: app.getPath('home') });
       const { response } = await dialog.showMessageBox({
         type: 'info',
-        message: 'Google Photos Wallpaper is turned off and your wallpaper is restored.',
+        message: 'Glimpse is turned off and your wallpaper is restored.',
         detail: 'Your screensaver was reset. Choose a screensaver in System Settings → Screen Saver.',
         buttons: ['Open Screen Saver Settings', 'OK'],
         defaultId: 1,
@@ -243,7 +243,7 @@ async function main(): Promise<void> {
     await desktop.start();
   } catch (e) {
     // Keep the tray running so sign-in and choosing photos still work.
-    dialog.showErrorBox('Google Photos Wallpaper could not start its wallpaper helper', (e as Error).message);
+    dialog.showErrorBox('Glimpse could not start its wallpaper helper', (e as Error).message);
     return;
   }
   await engine.restore();
@@ -254,7 +254,7 @@ if (!isPrimaryInstance) {
 } else {
   main().catch((e: unknown) => {
     console.error(e);
-    dialog.showErrorBox('Google Photos Wallpaper could not start', (e as Error).message);
+    dialog.showErrorBox('Glimpse could not start', (e as Error).message);
     app.quit();
   });
 }
