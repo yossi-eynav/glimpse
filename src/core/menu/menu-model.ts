@@ -40,7 +40,6 @@ export function menuModel(input: { state: AppState; notice: Notice | null; now: 
     startItem(state, n),
     action('next', 'Next photo', n > 0),
     separator,
-    { kind: 'toggle', id: 'toggleScreensaver', label: 'Use for screensaver', checked: state.settings.useForScreensaver },
     { kind: 'toggle', id: 'toggleLogin', label: 'Start at login', checked: state.settings.startAtLogin },
     separator,
     action('turnOff', 'Turn off'),

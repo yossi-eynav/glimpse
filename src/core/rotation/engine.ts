@@ -2,7 +2,6 @@ import { sep } from 'node:path';
 import type { PhotoStore } from '../library/photo-store.ts';
 import { consoleLog, type Log } from '../log.ts';
 import type { AppState, PhotoStatus } from '../persistence/app-state.ts';
-import type { Handoff } from '../screensaver/handoff.ts';
 import { applyPhoto, type Desktop } from '../wallpaper/desktop.ts';
 import type { Clock } from './clock.ts';
 import { isValidIntervalMinutes } from './custom-interval.ts';
@@ -21,7 +20,6 @@ export function createRotationEngine(deps: {
   photos: PhotoStore;
   random: () => number;
   save(state: AppState): Promise<void>;
-  handoff?: Handoff;
   log?: Log;
 }) {
   const state = deps.state;
@@ -67,9 +65,8 @@ export function createRotationEngine(deps: {
         continue;
       }
       if (state.original === null) await recordOriginals();
-      let path: string;
       try {
-        path = await applyPhoto(deps.desktop, deps.photos.photosDir, id);
+        await applyPhoto(deps.desktop, deps.photos.photosDir, id);
       } catch (e) {
         // Keep the current photo; the next scheduled tick tries again.
         log('warn', 'Could not set the wallpaper', { photoId: id, error: String(e) });
@@ -78,7 +75,6 @@ export function createRotationEngine(deps: {
       }
       state.rotation.currentPhotoId = id;
       schedule();
-      await publishToScreensaver(path, id);
       return 'shown';
     }
   };
@@ -93,7 +89,7 @@ export function createRotationEngine(deps: {
 
   const isPending = (id: string) => state.selection.photos.some((p) => p.id === id && p.status === 'pending');
 
-  /** Turned off, nothing may change the wallpaper or screensaver (feature 004, FR-011). */
+  /** Turned off, nothing may change the wallpaper (feature 004, FR-011). */
   const isOff = () => state.power === 'off';
 
   /** Remembers each display's wallpaper so Turn off can put it back (feature 004, FR-006). */
@@ -120,15 +116,6 @@ export function createRotationEngine(deps: {
     }
   };
 
-  const publishToScreensaver = async (path: string, id: string) => {
-    if (!state.settings.useForScreensaver || !deps.handoff) return;
-    try {
-      await deps.handoff.publish(path, id);
-    } catch (e) {
-      // The wallpaper already changed; a screensaver failure must not stop rotation.
-      log('warn', 'Could not update the screensaver photo', { error: String(e) });
-    }
-  };
 
   return {
     getState: (): AppState => state,
@@ -265,8 +252,8 @@ export function createRotationEngine(deps: {
       }),
 
     /**
-     * Stops the app affecting the Mac: rotation stops, original wallpapers go back on displays
-     * still showing our photos, and the screensaver stops showing them. Setup is kept (FR-008–FR-010).
+     * Stops the app affecting the Mac: rotation stops, and original wallpapers go back on displays
+     * still showing our photos. Setup is kept (FR-008–FR-010).
      */
     turnOff: () =>
       serial(async () => {
@@ -276,13 +263,6 @@ export function createRotationEngine(deps: {
           await deps.desktop.restore?.(state.original?.wallpapers ?? []);
         } catch (e) {
           log('warn', 'Could not restore the original wallpaper', { error: String(e) });
-        }
-        if (state.settings.useForScreensaver) {
-          try {
-            await deps.handoff?.disable();
-          } catch (e) {
-            log('warn', 'Could not turn off the screensaver photo', { error: String(e) });
-          }
         }
         state.power = 'off';
       }),
@@ -295,14 +275,6 @@ export function createRotationEngine(deps: {
         if (!state.selection.photos.some((p) => p.status === 'saved')) return;
         state.rotation.mode = 'running';
         await changePhoto();
-      }),
-
-    setUseForScreensaver: (on: boolean) =>
-      serial(async () => {
-        state.settings.useForScreensaver = on;
-        const id = state.rotation.currentPhotoId;
-        if (on && id) await publishToScreensaver(deps.photos.photoPath(id), id);
-        if (!on) await deps.handoff?.disable();
       }),
 
     displaysChanged: () =>

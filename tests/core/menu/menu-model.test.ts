@@ -35,7 +35,6 @@ test('signed in shows every item in contract order', () => {
     { kind: 'action', id: 'start', label: 'Start rotation', enabled: true },
     { kind: 'action', id: 'next', label: 'Next photo', enabled: true },
     { kind: 'separator' },
-    { kind: 'toggle', id: 'toggleScreensaver', label: 'Use for screensaver', checked: false },
     { kind: 'toggle', id: 'toggleLogin', label: 'Start at login', checked: true },
     { kind: 'separator' },
     { kind: 'action', id: 'turnOff', label: 'Turn off', enabled: true },
@@ -63,14 +62,14 @@ test('status line covers paused and blocked modes', () => {
   assert.deepEqual(status('blockedNoPhotos'), { kind: 'label', label: 'Stopped — no photos available' });
 });
 
-test('the screensaver toggle reflects the setting', () => {
-  const items = model(signedInState(['a'], (s) => (s.settings.useForScreensaver = true)));
-  assert.deepEqual(items.find((i) => i.kind === 'toggle' && i.id === 'toggleScreensaver'), {
-    kind: 'toggle',
-    id: 'toggleScreensaver',
-    label: 'Use for screensaver',
-    checked: true,
-  });
+test('the menu has no screensaver option', () => {
+  const all = (items: MenuItem[]): MenuItem[] => items.flatMap((i) => (i.kind === 'submenu' ? [i, ...all(i.items)] : [i]));
+  for (const state of [defaultState(), signedInState(['a']), signedInState(['a'], (s) => (s.power = 'off'))]) {
+    for (const item of all(model(state))) {
+      assert.notEqual('id' in item ? item.id : undefined, 'toggleScreensaver');
+      assert.doesNotMatch('label' in item ? item.label : '', /screensaver/i);
+    }
+  }
 });
 
 test('Start and Next are disabled with no available photos', () => {

@@ -16,9 +16,6 @@ import { loadState, saveState } from '../core/persistence/state-file.ts';
 import { createPickerClient } from '../core/picker/picker-client.ts';
 import { systemClock } from '../core/rotation/clock.ts';
 import { createRotationEngine } from '../core/rotation/engine.ts';
-import { createHandoffWriter, defaultHandoffDir } from '../core/screensaver/handoff.ts';
-import { installSaver, SCREEN_SAVER_SETTINGS_URL } from '../core/screensaver/installer.ts';
-import { uninstallSaver } from '../core/screensaver/uninstall.ts';
 import { registerIpc } from './ipc.ts';
 import { createLoginItem } from './platform/login-item.ts';
 import { createSafeStorageBox } from './platform/safe-storage-box.ts';
@@ -81,8 +78,6 @@ async function main(): Promise<void> {
   });
   app.on('before-quit', () => void desktop.stop());
 
-  const handoff = createHandoffWriter({ fs, dir: defaultHandoffDir(app.getPath('home')), clock: systemClock });
-
   const engine = createRotationEngine({
     state,
     clock: systemClock,
@@ -91,7 +86,6 @@ async function main(): Promise<void> {
     random: Math.random,
     save: (s) => saveState(fs, dataDir, s),
     log: consoleLog,
-    handoff,
   });
 
   const openExternal = (url: string) => shell.openExternal(url);
@@ -146,23 +140,6 @@ async function main(): Promise<void> {
 
   let lowDisk = false;
 
-  /** Installs our screensaver and asks the user to select it; macOS won't let apps select it (FR-021). */
-  const installAndGuideSaver = async () => {
-    await installSaver({
-      fs,
-      bundledPath: app.isPackaged
-        ? join(process.resourcesPath, 'Glimpse.saver')
-        : join(appDir, 'build', 'Glimpse.saver'),
-      home: app.getPath('home'),
-      openExternal,
-    });
-    void dialog.showMessageBox({
-      type: 'info',
-      message: "Select 'Glimpse' in Screen Saver settings",
-      detail: 'The screensaver will then show the same photo as your wallpaper.',
-    });
-  };
-
   const handlers: Record<string, () => unknown> = {
     signIn: runSignIn,
     chooseImages: async () => {
@@ -175,38 +152,19 @@ async function main(): Promise<void> {
     pause: () => engine.pause(),
     resume: () => engine.resume(),
     next: () => engine.next(),
-    toggleScreensaver: async () => {
-      if (engine.getState().settings.useForScreensaver) return engine.setUseForScreensaver(false);
-      await engine.setUseForScreensaver(true);
-      await installAndGuideSaver();
-    },
     // Feature 004: give the Mac back, keeping sign-in, photos and settings (FR-008–FR-010).
     turnOff: async () => {
       windows.close('selection'); // discards any pick in progress
-      const usedScreensaver = engine.getState().settings.useForScreensaver;
       await engine.turnOff();
-      if (!usedScreensaver) return;
-      await uninstallSaver({ fs, home: app.getPath('home') });
-      const { response } = await dialog.showMessageBox({
-        type: 'info',
-        message: 'Glimpse is turned off and your wallpaper is restored.',
-        detail: 'Your screensaver was reset. Choose a screensaver in System Settings → Screen Saver.',
-        buttons: ['Open Screen Saver Settings', 'OK'],
-        defaultId: 1,
-      });
-      if (response === 0) void shell.openExternal(SCREEN_SAVER_SETTINGS_URL);
     },
-    turnOn: async () => {
-      await engine.turnOn();
-      if (engine.getState().settings.useForScreensaver) await installAndGuideSaver();
-    },
+    turnOn: () => engine.turnOn(),
     toggleLogin: async () => {
       loginItem.setEnabled(!engine.getState().settings.startAtLogin);
       await engine.update((s) => (s.settings.startAtLogin = loginItem.isEnabled()));
     },
     signOut: async () => {
       windows.close('selection');
-      await signOut({ engine, google, tokenStore, photos, handoff });
+      await signOut({ engine, google, tokenStore, photos });
     },
     quit: () => app.quit(),
   };

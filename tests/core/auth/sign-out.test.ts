@@ -42,11 +42,3 @@ test('local cleanup still finishes when revoke fails', async () => {
   assert.equal(engine.getState().account.status, 'signedOut');
   assert.equal(await tokenStore.load(), null);
 });
-
-test('sign-out turns off the screensaver handoff', async () => {
-  const { engine, google, tokenStore, photos } = await setup(() => jsonResponse(200, {}));
-  const calls: string[] = [];
-  const handoff = { publish: async () => void calls.push('publish'), disable: async () => void calls.push('disable') };
-  await signOut({ engine, google, tokenStore, photos, handoff });
-  assert.deepEqual(calls, ['disable']);
-});

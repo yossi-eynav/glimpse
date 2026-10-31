@@ -7,7 +7,7 @@ import { loadState, saveState } from '../../../src/core/persistence/state-file.t
 test('defaults match the data model', () => {
   const s = defaultState();
   assert.deepEqual(s.account, { status: 'signedOut', email: null });
-  assert.deepEqual(s.settings, { intervalMinutes: 30, useForScreensaver: false, startAtLogin: false });
+  assert.deepEqual(s.settings, { intervalMinutes: 30, startAtLogin: false });
   assert.deepEqual(s.rotation, { mode: 'stopped', currentPhotoId: null, nextChangeAt: null });
   assert.deepEqual(s.selection, { photos: [], skippedNonPhotoCount: 0 });
 });
@@ -31,6 +31,15 @@ test('saveState then loadState round-trips', async () => {
   s.rotation = { mode: 'running', currentPhotoId: 'p1', nextChangeAt: 99 };
   await saveState(fs, '/data', s);
   assert.deepEqual(await loadState(fs, '/data'), s);
+});
+
+test('a legacy useForScreensaver setting is dropped on load', async () => {
+  const fs = new MemoryFileSystem();
+  await fs.writeAtomic(
+    '/data/state.json',
+    JSON.stringify({ settings: { intervalMinutes: 15, useForScreensaver: true, startAtLogin: true } }),
+  );
+  assert.deepEqual((await loadState(fs, '/data')).settings, { intervalMinutes: 15, startAtLogin: true });
 });
 
 test('loadState drops a saved shownThisRound from feature 001', async () => {

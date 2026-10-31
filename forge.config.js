@@ -9,7 +9,7 @@ export default {
     appBundleId: 'com.yossieynav.glimpse',
     icon: 'assets/icon', // assets/icon.icns, made from assets/wallpaper.png
     extendInfo: { LSUIElement: true },
-    extraResource: ['build/glimpse-helper', 'build/Glimpse.saver', 'config/google.json'],
+    extraResource: ['build/glimpse-helper', 'config/google.json'],
     ignore: [/^\/(src|tests|specs|native|scripts|\.specify|\.claude|build|config)(\/|$)/],
     ...(notarize && {
       osxSign: {},

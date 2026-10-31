@@ -3,7 +3,7 @@
 **Product:** Glimpse
 **Publisher:** The developer of Glimpse, an independent developer ("we", "us")
 **Contact:** [yossi.eynav@gmail.com](mailto:yossi.eynav@gmail.com)
-**Last updated:** 2026-10-28
+**Last updated:** 2026-11-01
 
 ## Agreement
 
@@ -12,8 +12,8 @@ Glimpse.
 
 ## What Glimpse is
 
-Glimpse is a free app for Mac. It shows photos you pick from Google Photos as your wallpaper,
-and, if you choose, as your screensaver. It changes the photo at the interval you set.
+Glimpse is a free app for Mac. It shows photos you pick from Google Photos as your wallpaper.
+It changes the photo at the interval you set.
 
 ## Who can use it
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Checks a packaged Glimpse.app (contracts/distribution.md D5): valid ad-hoc signature,
-# universal binary, bundled native pieces and config. Exits 1 if any check fails.
+# Checks a packaged Glimpse.app (contracts/distribution.md D5, specs/008 M3): valid ad-hoc
+# signature, universal binary, the bundled helper and config, and no screensaver. Exits 1 if
+# any check fails.
 set -uo pipefail
 
 app="${1:?usage: check-package.sh <path/to/Glimpse.app>}"
@@ -23,8 +24,9 @@ if ! codesign --verify --deep --strict "$app" 2>/dev/null; then
 fi
 check "signature is ad-hoc" bash -c 'codesign -dv "$1" 2>&1 | grep -q "^Signature=adhoc$"' _ "$app"
 check "universal (arm64 + x86_64)" bash -c 'a=$(lipo -archs "$1/Contents/MacOS/Glimpse") && [[ $a == *arm64* && $a == *x86_64* ]]' _ "$app"
-for f in glimpse-helper Glimpse.saver google.json; do
+for f in glimpse-helper google.json; do
   check "bundles Resources/$f" test -e "$app/Contents/Resources/$f"
 done
+check "no screensaver bundled" test ! -e "$app/Contents/Resources/Glimpse.saver"
 
 exit "$failed"

@@ -3,11 +3,11 @@
 **Product:** Glimpse
 **Publisher:** The developer of Glimpse, an independent developer ("we", "us")
 **Contact:** [yossi.eynav@gmail.com](mailto:yossi.eynav@gmail.com)
-**Last updated:** 2026-10-28
+**Last updated:** 2026-11-01
 
 ## Summary
 
-Glimpse shows photos you pick from Google Photos as your Mac's wallpaper and screensaver.
+Glimpse shows photos you pick from Google Photos as your Mac's wallpaper.
 Everything stays on your Mac. We never see your photos, and nothing is sent to us. Glimpse talks
 only to Google, and only to sign you in and fetch the photos you picked.
 
@@ -29,7 +29,7 @@ anything in your library.
 
 Glimpse uses this information only to:
 
-- set your picked photos as your wallpaper and, if you turn it on, your screensaver;
+- set your picked photos as your wallpaper;
 - keep working when you are offline, using the copies saved on your Mac;
 - show which Google account is signed in.
 
@@ -45,7 +45,6 @@ with us. On your Mac, Glimpse keeps:
 - your settings, such as how often the wallpaper changes;
 - the wallpaper you had before Glimpse changed it, so it can put it back when you turn Glimpse
   off;
-- a copy of the current photo for the screensaver, if you use the screensaver;
 - your sign-in tokens, encrypted with a key kept in your macOS Keychain.
 
 Glimpse does not write log files. Messages it prints while running hide your tokens.
@@ -70,14 +69,10 @@ including the Limited Use requirements.
 Your data stays on your Mac until you delete it:
 
 - **Remove a photo** in Glimpse, and its copy and thumbnail are deleted.
-- **Turn off the screensaver option**, or choose **Turn off**, and the screensaver's copy of the
-  photo is deleted.
-- **Sign out**, and Glimpse deletes every copy of your photos (including the screensaver's), your
-  thumbnails, your photo list, your email address, and your tokens. It also tells Google to
-  cancel its access.
+- **Sign out**, and Glimpse deletes every copy of your photos, your thumbnails, your photo list,
+  your email address, and your tokens. It also tells Google to cancel its access.
 - **Uninstall Glimpse** and delete its folder, `~/Library/Application Support/Glimpse/`, to
-  remove your settings and everything else it saved. If you used the screensaver, also delete
-  `~/Library/Screen Savers/Glimpse.saver`.
+  remove your settings and everything else it saved.
 
 You can also cancel Glimpse's access to your Google account at any time at
 <https://myaccount.google.com/permissions>.

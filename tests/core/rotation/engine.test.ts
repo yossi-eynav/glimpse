@@ -179,50 +179,6 @@ test('stop clears the rotation', async () => {
   assert.deepEqual(engine.getState().rotation, { mode: 'stopped', currentPhotoId: null, nextChangeAt: null });
 });
 
-// --- US2: screensaver handoff ---
-
-const fakeHandoff = () => {
-  const calls: string[] = [];
-  return {
-    calls,
-    handoff: {
-      publish: async (path: string, id: string) => void calls.push(`publish:${id}:${path}`),
-      disable: async () => void calls.push('disable'),
-    },
-  };
-};
-
-test('with useForScreensaver on, every photo change is published to the screensaver', async () => {
-  const h = fakeHandoff();
-  const { engine, clock } = await makeEngine(signedInState(['a', 'b'], (s) => (s.settings.useForScreensaver = true)), { handoff: h.handoff });
-  await engine.start();
-  clock.advance(30 * MIN);
-  await engine.tick();
-  assert.equal(h.calls.length, 2);
-  const id = engine.getState().rotation.currentPhotoId;
-  assert.equal(h.calls[1], `publish:${id}:/data/Photos/${id}.jpg`);
-});
-
-test('nothing is published while useForScreensaver is off', async () => {
-  const h = fakeHandoff();
-  const { engine } = await makeEngine(signedInState(['a', 'b']), { handoff: h.handoff });
-  await engine.start();
-  assert.deepEqual(h.calls, []);
-});
-
-test('setUseForScreensaver(true) publishes the current photo; false disables the handoff', async () => {
-  const h = fakeHandoff();
-  const { engine } = await makeEngine(signedInState(['a', 'b']), { handoff: h.handoff });
-  await engine.start();
-  await engine.setUseForScreensaver(true);
-  assert.equal(engine.getState().settings.useForScreensaver, true);
-  assert.match(h.calls[0], /^publish:/);
-  await engine.setUseForScreensaver(false);
-  assert.deepEqual(h.calls.slice(1), ['disable']);
-  await engine.next();
-  assert.equal(h.calls.length, 2);
-});
-
 // --- Amendment A: glimpse-helper ---
 
 test('stop tells the desktop helper to forget the current photo', async () => {

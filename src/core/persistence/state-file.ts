@@ -11,7 +11,11 @@ export async function loadState(fs: FileSystem, dir: string): Promise<AppState> 
     return {
       account: { ...d.account, ...parsed.account },
       selection: { ...d.selection, ...parsed.selection },
-      settings: { ...d.settings, ...parsed.settings },
+      // Known keys only, so settings removed by later versions are dropped (feature 008).
+      settings: {
+        intervalMinutes: parsed.settings?.intervalMinutes ?? d.settings.intervalMinutes,
+        startAtLogin: parsed.settings?.startAtLogin ?? d.settings.startAtLogin,
+      },
       // Known keys only, so a shownThisRound saved by feature 001 is dropped.
       rotation: {
         mode: parsed.rotation?.mode ?? d.rotation.mode,

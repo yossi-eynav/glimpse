@@ -3,7 +3,7 @@
   "productName": "Glimpse",
   "version": "0.1.0",
   "private": true,
-  "description": "Rotate your macOS wallpaper and screensaver through photos you choose from Google Photos.",
+  "description": "Rotate your macOS wallpaper through photos you choose from Google Photos.",
   "type": "module",
   "main": "dist/main/main.js",
   "engines": {

@@ -47,16 +47,6 @@ test('only the newly added photos are candidates', async () => {
   }
 });
 
-test('the screensaver gets the new photo', async () => {
-  const published: string[] = [];
-  const handoff = { publish: async (_p: string, id: string) => void published.push(id), disable: async () => {} };
-  const s = state();
-  s.settings.useForScreensaver = true;
-  const { engine } = await makeEngine(s, { handoff });
-  await engine.selectionChanged({ addedIds: ['c'] });
-  assert.deepEqual(published, ['c']);
-});
-
 test('a photo still downloading is shown as soon as it is saved', async () => {
   const { engine, desktop } = await makeEngine(state([['c', 'pending']]));
   await engine.start();

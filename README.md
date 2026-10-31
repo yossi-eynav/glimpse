@@ -1,7 +1,7 @@
 # Glimpse
 
-A macOS menu bar app that rotates your desktop wallpaper, and optionally your screensaver,
-through photos you choose from Google Photos.
+A macOS menu bar app that rotates your desktop wallpaper through photos you choose from Google
+Photos.
 
 - **Menu bar only**: there is no Dock icon. Every option is in the menu bar menu. When you are
   signed out, the only option is **Sign in with Google**.
@@ -12,7 +12,6 @@ through photos you choose from Google Photos.
   your selection, never the one already on screen. The photo fills the screen on every display
   and on every Space (desktop) you switch to. If you pick a wallpaper yourself in System
   Settings, rotation pauses instead of overwriting it.
-- **Screensaver**: optional, and shows the same photo as the wallpaper.
 - **Privacy**: the app has read-only access to the photos you pick. Photos and tokens stay on
   your Mac, and tokens are encrypted with a key kept in your Keychain.
 
@@ -43,8 +42,8 @@ If you're comfortable with Terminal, you can skip steps 2–3 by running
 
 - macOS 14 (Sonoma) or later
 - Node.js 24 or later
-- Command Line Tools (`xcode-select --install`), for `swiftc` and `lipo`, which build the two
-  native pieces. Full Xcode is not needed.
+- Command Line Tools (`xcode-select --install`), for `swiftc` and `lipo`, which build the
+  wallpaper helper. Full Xcode is not needed.
 
 ## Google Cloud setup
 
@@ -68,7 +67,7 @@ If you're comfortable with Terminal, you can skip steps 2–3 by running
 npm install
 npm test             # every behavior test; runs offline, no network access
 npm run typecheck
-npm run build:native # builds build/glimpse-helper and build/Glimpse.saver with swiftc
+npm run build:native # builds build/glimpse-helper with swiftc
 npm start            # compiles TypeScript and launches the app in the menu bar
 ```
 
@@ -81,12 +80,10 @@ and bundles that window with esbuild into `dist/renderer/selection/selection.js`
 states live in `src/renderer/selection/view-model.ts`, which is unit-tested; the components are
 checked by a render test that uses `react-dom/server`.
 
-`native/` holds the two small Swift pieces:
-- `native/helper/` is `glimpse-helper`, the wallpaper helper. The app runs it as a child process
-  and talks to it over a pipe. It sets the wallpaper, re-applies it on Space changes, and reports
-  manual changes. See
-  [`contracts/wallpaper-helper.md`](specs/001-photos-wallpaper-rotation/contracts/wallpaper-helper.md).
-- `native/saver/` is the screensaver.
+`native/helper/` holds `glimpse-helper`, the small Swift wallpaper helper. The app runs it as a
+child process and talks to it over a pipe. It sets the wallpaper, re-applies it on Space
+changes, and reports manual changes. See
+[`contracts/wallpaper-helper.md`](specs/001-photos-wallpaper-rotation/contracts/wallpaper-helper.md).
 
 Tests never change your real wallpaper: they drive a fake helper (`tests/support/fake-helper.mjs`).
 
@@ -108,7 +105,7 @@ To sign with a Developer ID and notarize instead, set these environment variable
 |----------|---------|
 | `APPLE_TEAM_ID` | Your Apple Developer team ID |
 | `NOTARY_KEYCHAIN_PROFILE` | A profile saved with `xcrun notarytool store-credentials` |
-| `DEVELOPER_ID` | Used to sign `glimpse-helper` and the screensaver, for example `Developer ID Application: Name (TEAMID)` |
+| `DEVELOPER_ID` | Used to sign `glimpse-helper`, for example `Developer ID Application: Name (TEAMID)` |
 
 The DMG maker depends on two native modules, `fs-xattr` and `macos-alias`, which build during
 install. Their install scripts are approved in `package.json` (`allowScripts`), so `npm ci` and
@@ -138,8 +135,6 @@ be public for anyone to download the releases.
 - **Albums are a snapshot.** Google only lets third-party apps read the photos a user picks in
   Google's picker. Photos added to an album later are not picked up automatically; pick them
   again.
-- **Screensaver setup.** After you turn on "Use for screensaver", you still have to select
-  "Glimpse" once in System Settings → Screen Saver.
 
 ## Legal
 

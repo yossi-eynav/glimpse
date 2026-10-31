@@ -25,7 +25,6 @@ export type Selection = {
 export type RotationSettings = {
   /** Integer, 1 ≤ value ≤ 10080 (7 days). */
   intervalMinutes: number;
-  useForScreensaver: boolean;
   startAtLogin: boolean;
 };
 
@@ -38,7 +37,7 @@ export type RotationState = {
   nextChangeAt: number | null;
 };
 
-/** Turned off, the app leaves the wallpaper and screensaver alone (feature 004). */
+/** Turned off, the app leaves the wallpaper alone (feature 004). */
 export type Power = 'on' | 'off';
 
 /** Each display's wallpaper before the app changed it; null when it was already one of ours. */
@@ -60,7 +59,7 @@ export function defaultState(): AppState {
   return {
     account: { status: 'signedOut', email: null },
     selection: { photos: [], skippedNonPhotoCount: 0 },
-    settings: { intervalMinutes: 30, useForScreensaver: false, startAtLogin: false },
+    settings: { intervalMinutes: 30, startAtLogin: false },
     rotation: { mode: 'stopped', currentPhotoId: null, nextChangeAt: null },
     power: 'on',
     original: null,
