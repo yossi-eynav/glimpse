@@ -1,17 +1,18 @@
 <!--
 Sync Impact Report
-- Version change: (unratified template) → 1.0.0
-- Modified principles:
-  - [PRINCIPLE_1_NAME] → I. Test-First (NON-NEGOTIABLE)
-  - [PRINCIPLE_2_NAME] → II. Simplicity (YAGNI)
-- Removed template slots: [PRINCIPLE_3_NAME] … [PRINCIPLE_5_NAME] (project adopts
-  two principles; more can be added via MINOR amendment)
-- Added sections: Desktop Platform Constraints, Development Workflow, Governance
+- Version change: 1.0.0 → 1.0.1 (PATCH: clarifications, no change in meaning)
+- Modified principles: none
+- Modified sections:
+  - Title: "Google Photos App Constitution" → "Glimpse Constitution" (product name)
+  - Desktop Platform Constraints: the credentials rule now says that encryption with a key
+    held in the OS secure store (e.g. Electron safeStorage + macOS Keychain) satisfies it,
+    matching how every plan's Constitution Check already applied it
+- Added sections: none
 - Removed sections: none
 - Deferred TODOs: none
 -->
 
-# Google Photos App Constitution
+# Glimpse Constitution
 
 ## Core Principles
 
@@ -49,8 +50,10 @@ added only when a real requirement pays for it.
   launch, background and foreground, offline or flaky network, and quit or restart.
 - The UI MUST remain responsive. Network calls, media decoding, and large file operations MUST
   NOT block the UI thread.
-- OAuth credentials and tokens MUST be stored using the operating system's secure credential
-  store, never in plain-text files or logs.
+- OAuth credentials and tokens MUST be protected by the operating system's secure credential
+  store: either stored in it directly, or encrypted with a key held in it (for example,
+  Electron `safeStorage` backed by the macOS Keychain). They MUST never appear in plain-text
+  files or logs.
 - Each feature's `/speckit-plan` MUST state the desktop stack, supported operating systems, and
   packaging approach it relies on. Once the first plan sets these, a later plan that changes them
   MUST justify the change under Principle II.
@@ -79,4 +82,4 @@ added only when a real requirement pays for it.
 - Compliance is reviewed at every plan's Constitution Check and at every code review. An
   unresolved violation blocks the merge unless it is justified in Complexity Tracking.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-27 | **Last Amended**: 2026-10-27
+**Version**: 1.0.1 | **Ratified**: 2026-10-27 | **Last Amended**: 2026-10-31
