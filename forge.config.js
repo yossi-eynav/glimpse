@@ -7,6 +7,7 @@ export default {
   packagerConfig: {
     name: 'Glimpse',
     appBundleId: 'com.yossieynav.glimpse',
+    icon: 'assets/icon', // assets/icon.icns, made from assets/wallpaper.png
     extendInfo: { LSUIElement: true },
     extraResource: ['build/glimpse-helper', 'build/Glimpse.saver', 'config/google.json'],
     ignore: [/^\/(src|tests|specs|native|scripts|\.specify|\.claude|build|config)(\/|$)/],
@@ -30,6 +31,6 @@ export default {
   },
   makers: [
     { name: '@electron-forge/maker-zip', platforms: ['darwin'] },
-    { name: '@electron-forge/maker-dmg', platforms: ['darwin'] },
+    { name: '@electron-forge/maker-dmg', platforms: ['darwin'], config: { icon: 'assets/icon.icns' } },
   ],
 };

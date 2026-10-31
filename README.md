@@ -147,3 +147,7 @@ be public for anyone to download the releases.
 - [Terms of Service](TERMS.md)
 
 Glimpse is not affiliated with Google. Google Photos is a trademark of Google LLC.
+
+## Credits
+
+<a href="https://www.flaticon.com/free-icons/image-comics" title="Image Comics icons">Image Comics icons created by Design Circle - Flaticon</a>
