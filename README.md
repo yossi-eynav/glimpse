@@ -4,7 +4,9 @@ A macOS menu bar app that rotates your desktop wallpaper through photos you choo
 Photos.
 
 - **Menu bar only**: there is no Dock icon. Every option is in the menu bar menu. When you are
-  signed out, the only option is **Sign in with Google**.
+  signed out, the options are **Sign in with Google** and **Contact me 🚀**.
+- **Contact**: **Contact me 🚀** opens a new Gmail message to the developer in your browser, with
+  the Glimpse and macOS versions filled in. You review it and send it from your own account.
 - **Choosing photos**: "Choose Google Photos images…" opens a selection window. **Add from Google
   Photos…** opens Google's picker in your browser, and the photos you pick are saved on your Mac,
   so rotation keeps working offline.

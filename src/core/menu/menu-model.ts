@@ -25,7 +25,7 @@ const separator: MenuItem = { kind: 'separator' };
 /** The tray menu as data (contracts/menu-ui.md). */
 export function menuModel(input: { state: AppState; notice: Notice | null; now: number; timeZone?: string }): MenuItem[] {
   const { state, notice } = input;
-  if (state.account.status === 'signedOut') return [action('signIn', 'Sign in with Google'), action('quit', 'Quit')];
+  if (state.account.status === 'signedOut') return [action('signIn', 'Sign in with Google'), action('contact', 'Contact me 🚀'), action('quit', 'Quit')];
 
   const n = availableCount(state.selection);
   if (state.power === 'off') return offMenu(state, notice, n);
@@ -46,6 +46,7 @@ export function menuModel(input: { state: AppState; notice: Notice | null; now: 
     separator,
     { kind: 'label', label: state.account.email ?? 'Signed in' },
     action('signOut', 'Sign out'),
+    action('contact', 'Contact me 🚀'),
     action('quit', 'Quit'),
   );
   return items;
@@ -63,6 +64,7 @@ function offMenu(state: AppState, notice: Notice | null, available: number): Men
     separator,
     { kind: 'label', label: state.account.email ?? 'Signed in' },
     action('signOut', 'Sign out'),
+    action('contact', 'Contact me 🚀'),
     action('quit', 'Quit'),
   );
   return items;

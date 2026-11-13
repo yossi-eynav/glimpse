@@ -18,9 +18,10 @@ const intervalSubmenu = (current: number): MenuItem => ({
   ],
 });
 
-test('signed out shows only Sign in and Quit', () => {
+test('signed out shows only Sign in, Contact me and Quit', () => {
   assert.deepEqual(model(defaultState()), [
     { kind: 'action', id: 'signIn', label: 'Sign in with Google', enabled: true },
+    { kind: 'action', id: 'contact', label: 'Contact me 🚀', enabled: true },
     { kind: 'action', id: 'quit', label: 'Quit', enabled: true },
   ]);
 });
@@ -41,6 +42,7 @@ test('signed in shows every item in contract order', () => {
     { kind: 'separator' },
     { kind: 'label', label: 'test@example.com' },
     { kind: 'action', id: 'signOut', label: 'Sign out', enabled: true },
+    { kind: 'action', id: 'contact', label: 'Contact me 🚀', enabled: true },
     { kind: 'action', id: 'quit', label: 'Quit', enabled: true },
   ]);
 });
@@ -105,7 +107,7 @@ const offState = (ids: string[] = ['a'], patch: (s: ReturnType<typeof signedInSt
     patch(s);
   });
 
-test('the off menu shows only the status, Turn on, account, Sign out and Quit', () => {
+test('the off menu shows only the status, Turn on, account, Sign out, Contact me and Quit', () => {
   assert.deepEqual(model(offState()), [
     { kind: 'label', label: 'Turned off — your wallpaper is restored' },
     { kind: 'separator' },
@@ -113,6 +115,7 @@ test('the off menu shows only the status, Turn on, account, Sign out and Quit', 
     { kind: 'separator' },
     { kind: 'label', label: 'test@example.com' },
     { kind: 'action', id: 'signOut', label: 'Sign out', enabled: true },
+    { kind: 'action', id: 'contact', label: 'Contact me 🚀', enabled: true },
     { kind: 'action', id: 'quit', label: 'Quit', enabled: true },
   ]);
 });

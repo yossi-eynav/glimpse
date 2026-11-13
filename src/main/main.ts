@@ -8,6 +8,7 @@ import { TokenStore } from '../core/auth/token-store.ts';
 import { createDownloader } from '../core/library/downloader.ts';
 import { createPhotoStore } from '../core/library/photo-store.ts';
 import { createSelectionSession } from '../core/library/selection-session.ts';
+import { contactLink } from '../core/contact/contact-link.ts';
 import { consoleLog } from '../core/log.ts';
 import { menuModel } from '../core/menu/menu-model.ts';
 import { currentNotice } from '../core/menu/notice.ts';
@@ -166,6 +167,7 @@ async function main(): Promise<void> {
       windows.close('selection');
       await signOut({ engine, google, tokenStore, photos });
     },
+    contact: () => openExternal(contactLink({ appVersion: app.getVersion(), osVersion: process.getSystemVersion() })),
     quit: () => app.quit(),
   };
 
