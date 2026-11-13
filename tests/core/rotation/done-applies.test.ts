@@ -24,7 +24,6 @@ test('while running, Done shows one of the newly added photos and restarts the i
 for (const [name, prepare] of [
   ['stopped', async () => {}],
   ['paused', async (e: Awaited<ReturnType<typeof makeEngine>>['engine']) => { await e.start(); await e.pause(); }],
-  ['pausedExternalChange', async (e: Awaited<ReturnType<typeof makeEngine>>['engine']) => { await e.start(); await e.externalChange(); }],
 ] as const) {
   test(`from ${name}, Done shows a new photo and the rotation runs`, async () => {
     const { engine, desktop } = await makeEngine(state());

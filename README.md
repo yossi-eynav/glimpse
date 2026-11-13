@@ -11,7 +11,7 @@ Photos.
 - **Rotation**: pick an interval from 1 minute to 7 days. Each change shows a random photo from
   your selection, never the one already on screen. The photo fills the screen on every display
   and on every Space (desktop) you switch to. If you pick a wallpaper yourself in System
-  Settings, rotation pauses instead of overwriting it.
+  Settings, it stays until the next change.
 - **Privacy**: the app has read-only access to the photos you pick. Photos and tokens stay on
   your Mac, and tokens are encrypted with a key kept in your Keychain.
 

@@ -195,7 +195,6 @@ async function main(): Promise<void> {
 
   createScheduler({ ...engine, tick: tickAndRetry });
   wireSystemEvents({ screen, powerMonitor, engine: { ...engine, tick: tickAndRetry } });
-  desktop.onExternalChange(() => void engine.externalChange());
 
   try {
     await desktop.start();

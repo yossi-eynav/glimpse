@@ -46,19 +46,17 @@ test('signed in shows every item in contract order', () => {
 });
 
 test('the start item depends on the rotation mode', () => {
-  const startItem = (mode: 'stopped' | 'running' | 'paused' | 'pausedExternalChange' | 'blockedNoPhotos') =>
+  const startItem = (mode: 'stopped' | 'running' | 'paused' | 'blockedNoPhotos') =>
     model(signedInState(['a'], (s) => (s.rotation.mode = mode)))[5];
   assert.deepEqual(startItem('stopped'), { kind: 'action', id: 'start', label: 'Start rotation', enabled: true });
   assert.deepEqual(startItem('blockedNoPhotos'), { kind: 'action', id: 'start', label: 'Start rotation', enabled: true });
   assert.deepEqual(startItem('running'), { kind: 'action', id: 'pause', label: 'Pause', enabled: true });
   assert.deepEqual(startItem('paused'), { kind: 'action', id: 'resume', label: 'Resume', enabled: true });
-  assert.deepEqual(startItem('pausedExternalChange'), { kind: 'action', id: 'resume', label: 'Resume', enabled: true });
 });
 
 test('status line covers paused and blocked modes', () => {
-  const status = (mode: 'paused' | 'pausedExternalChange' | 'blockedNoPhotos') => model(signedInState(['a'], (s) => (s.rotation.mode = mode)))[0];
+  const status = (mode: 'paused' | 'blockedNoPhotos') => model(signedInState(['a'], (s) => (s.rotation.mode = mode)))[0];
   assert.deepEqual(status('paused'), { kind: 'label', label: 'Paused' });
-  assert.deepEqual(status('pausedExternalChange'), { kind: 'label', label: 'Paused — wallpaper changed in System Settings' });
   assert.deepEqual(status('blockedNoPhotos'), { kind: 'label', label: 'Stopped — no photos available' });
 });
 

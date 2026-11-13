@@ -97,3 +97,15 @@ test('a state file from before feature 004 loads as on, with no originals', asyn
   assert.equal(s.power, 'on');
   assert.equal(s.original, null);
 });
+
+test('a legacy pausedExternalChange mode loads as running', async () => {
+  const fs = new MemoryFileSystem();
+  await fs.writeAtomic('/data/state.json', JSON.stringify({ rotation: { mode: 'pausedExternalChange', currentPhotoId: 'p1', nextChangeAt: null } }));
+  assert.deepEqual((await loadState(fs, '/data')).rotation, { mode: 'running', currentPhotoId: 'p1', nextChangeAt: null });
+});
+
+test('a saved paused mode stays paused', async () => {
+  const fs = new MemoryFileSystem();
+  await fs.writeAtomic('/data/state.json', JSON.stringify({ rotation: { mode: 'paused', currentPhotoId: 'p1', nextChangeAt: null } }));
+  assert.equal((await loadState(fs, '/data')).rotation.mode, 'paused');
+});

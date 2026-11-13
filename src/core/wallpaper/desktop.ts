@@ -12,8 +12,6 @@ export type Desktop = {
    * and keeps doing so on Space changes. Resolves to the number of displays changed (feature 004).
    */
   restore?(paths: (string | null)[]): Promise<number>;
-  /** Called when the user changes the wallpaper outside the app (FR-018). */
-  onExternalChange?(listener: (paths: string[]) => void): () => void;
 };
 
 export async function applyPhoto(desktop: Desktop, photosDir: string, id: string): Promise<string> {

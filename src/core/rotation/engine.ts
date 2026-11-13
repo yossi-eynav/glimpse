@@ -104,19 +104,6 @@ export function createRotationEngine(deps: {
     state.original = { wallpapers, recordedAt: deps.clock.now() };
   };
 
-  /** True when some screen shows a wallpaper the app didn't set (FR-018, research R5). */
-  const changedOutsideApp = async (): Promise<boolean> => {
-    if (!state.rotation.currentPhotoId) return false;
-    const ours = deps.photos.photosDir + sep;
-    try {
-      return (await deps.desktop.get()).some((path) => !path.startsWith(ours));
-    } catch (e) {
-      log('warn', 'Could not read the current wallpaper', { error: String(e) });
-      return false;
-    }
-  };
-
-
   return {
     getState: (): AppState => state,
 
@@ -145,11 +132,6 @@ export function createRotationEngine(deps: {
           return;
         }
         if (mode !== 'running' || nextChangeAt === null || deps.clock.now() < nextChangeAt) return;
-        if (await changedOutsideApp()) {
-          state.rotation.mode = 'pausedExternalChange';
-          state.rotation.nextChangeAt = null;
-          return;
-        }
         await changePhoto();
       }),
 
@@ -170,8 +152,7 @@ export function createRotationEngine(deps: {
     resume: () =>
       serial(async () => {
         if (isOff()) return;
-        const { mode } = state.rotation;
-        if (mode !== 'paused' && mode !== 'pausedExternalChange') return;
+        if (state.rotation.mode !== 'paused') return;
         state.rotation.mode = 'running';
         schedule();
       }),
@@ -185,14 +166,6 @@ export function createRotationEngine(deps: {
         if (state.rotation.mode === 'blockedNoPhotos') return;
         state.rotation.mode = mode;
         schedule();
-      }),
-
-    /** The user set a wallpaper outside the app (FR-018): pause without touching it. */
-    externalChange: () =>
-      serial(async () => {
-        if (state.rotation.mode !== 'running') return;
-        state.rotation.mode = 'pausedExternalChange';
-        state.rotation.nextChangeAt = null;
       }),
 
     stop: () =>

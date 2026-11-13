@@ -28,7 +28,7 @@ export type RotationSettings = {
   startAtLogin: boolean;
 };
 
-export type RotationMode = 'stopped' | 'running' | 'paused' | 'pausedExternalChange' | 'blockedNoPhotos';
+export type RotationMode = 'stopped' | 'running' | 'paused' | 'blockedNoPhotos';
 
 export type RotationState = {
   mode: RotationMode;

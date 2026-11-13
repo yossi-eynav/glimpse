@@ -60,7 +60,6 @@ export function createHelperDesktop(opts: {
   let lastWallpaperCommand: Extract<Command, { cmd: 'show' | 'restore' }> | null = null;
   let restarts: number[] = [];
   const pending = new Map<number, Pending>();
-  const externalListeners = new Set<(paths: string[]) => void>();
   let readyWaiter: { resolve(): void; reject(e: Error): void; timer: NodeJS.Timeout } | null = null;
 
   /** Rejects requests already written to the helper (or all of them); unsent ones wait for a restart. */
@@ -128,7 +127,7 @@ export function createHelperDesktop(opts: {
           opts.log('warn', 'glimpse-helper sent an invalid line', { reason: msg.reason });
         } else if (msg.type === 'event') {
           if (msg.event === 'ready') onReady(msg.version, isRestart);
-          else if (msg.event === 'externalChange') for (const l of externalListeners) l(msg.paths);
+          else if (msg.event === 'externalChange') opts.log('info', 'The wallpaper was changed outside Glimpse; it stays until the next change', { paths: msg.paths });
           else opts.log('info', 'glimpse-helper re-applied the wallpaper', { reason: msg.reason });
         } else {
           const p = pending.get(msg.id);
@@ -242,11 +241,6 @@ export function createHelperDesktop(opts: {
     async restore(paths) {
       lastWallpaperCommand = { cmd: 'restore', paths };
       return (await request(lastWallpaperCommand)).restored ?? 0;
-    },
-
-    onExternalChange(listener) {
-      externalListeners.add(listener);
-      return () => externalListeners.delete(listener);
     },
   };
 }

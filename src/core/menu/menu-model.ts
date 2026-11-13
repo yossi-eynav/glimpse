@@ -73,7 +73,6 @@ function startItem(state: AppState, available: number): MenuItem {
     case 'running':
       return action('pause', 'Pause');
     case 'paused':
-    case 'pausedExternalChange':
       return action('resume', 'Resume');
     default:
       return action('start', 'Start rotation', available > 0);
@@ -96,8 +95,6 @@ function statusLine(state: AppState, now: number, timeZone?: string): string {
       return nextChangeAt === null ? 'Running' : `Next change ${formatWhen(nextChangeAt, now, timeZone)}`;
     case 'paused':
       return 'Paused';
-    case 'pausedExternalChange':
-      return 'Paused — wallpaper changed in System Settings';
     case 'blockedNoPhotos':
       return 'Stopped — no photos available';
     case 'stopped':

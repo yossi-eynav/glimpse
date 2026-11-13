@@ -124,14 +124,12 @@ test('gives up after maxRestarts crashes within the window', async () => {
   await assert.rejects(desktop.get(), HelperUnavailable);
 });
 
-test('externalChange events are delivered to subscribers', async () => {
-  const { desktop } = await make({ FAKE_HELPER_EMIT_EXTERNAL: '1' });
-  const seen: string[][] = [];
-  desktop.onExternalChange((paths) => seen.push(paths));
+test('externalChange events are logged and change nothing', async () => {
+  const { desktop, logged } = await make({ FAKE_HELPER_EMIT_EXTERNAL: '1' });
   await desktop.start();
   await desktop.set('/p/a.jpg');
-  await waitFor(() => seen.length === 1);
-  assert.deepEqual(seen, [['/Users/x/Pictures/cat.jpg']]);
+  await waitFor(() => logged.some((l) => l.level === 'info' && l.message.includes('changed outside Glimpse')));
+  assert.ok(!logged.some((l) => l.level === 'warn' && l.message === 'glimpse-helper sent an invalid line'));
   await desktop.stop();
 });
 

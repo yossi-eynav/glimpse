@@ -18,7 +18,8 @@ export async function loadState(fs: FileSystem, dir: string): Promise<AppState> 
       },
       // Known keys only, so a shownThisRound saved by feature 001 is dropped.
       rotation: {
-        mode: parsed.rotation?.mode ?? d.rotation.mode,
+        // Feature 009 removed the automatic pause; a file saved in it resumes (research R3).
+        mode: (parsed.rotation?.mode as string) === 'pausedExternalChange' ? 'running' : (parsed.rotation?.mode ?? d.rotation.mode),
         currentPhotoId: parsed.rotation?.currentPhotoId ?? d.rotation.currentPhotoId,
         nextChangeAt: parsed.rotation?.nextChangeAt ?? d.rotation.nextChangeAt,
       },
